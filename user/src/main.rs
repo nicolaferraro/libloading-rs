@@ -6,6 +6,7 @@ use tokio::runtime::Handle;
 use common::Helloer;
 
 #[tokio::main]
+//#[tokio::main(flavor = "current_thread")]
 async fn main() {
     call_lib().await;
     println!("5. End of main");
