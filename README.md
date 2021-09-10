@@ -2,7 +2,7 @@
 
 ## 1. This works
 
-The following command runs correctly to completion:
+The following command runs correctly to completion (*since it probably uses a single thread*):
 
 ```
 cargo test -- --nocapture
@@ -21,6 +21,8 @@ test tests::check_working_from_main_lib ... ok
 ```
 
 ## 2. This does not work
+
+Since main is configured to run on multiple threads, the following does not work:
 
 ```
 cargo run
