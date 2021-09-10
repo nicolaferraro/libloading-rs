@@ -1,27 +1,25 @@
-use std::convert::TryFrom;
-
 use async_trait::async_trait;
-use hyper::{Client, Uri};
-use hyper::body::HttpBody;
-use tokio::io::AsyncWriteExt;
+use tokio::runtime::Handle;
 
 use common::Helloer;
 
-pub struct Actor {}
+#[no_mangle]
+pub fn load_plugin(handle: Handle) -> Box<dyn Helloer> {
+    Box::new(Actor { handle })
+}
+
+pub struct Actor {
+    handle: Handle,
+}
 
 #[async_trait]
 impl Helloer for Actor {
     async fn say_hello(&self) -> String {
-        let client = Client::new();
-        let uri = Uri::try_from("http://eu.httpbin.org/").unwrap();
-        let mut response = client.get(uri).await.unwrap();
-
-        let mut data = Vec::<u8>::new();
-        while let Some(chunk) = response.body_mut().data().await {
-            data.write_all(&chunk.unwrap()).await.unwrap();
-        }
-        let str = String::from_utf8_lossy(data.as_slice());
-        str.to_string()
+        println!("2. Enter say_hello, let's spawn a new task on the handle from the dylib...");
+        self.handle.spawn(async {
+            println!("3. Print something (will never happen)!");
+        }).await.unwrap();
+        "4. Return value".to_string()
     }
 }
 

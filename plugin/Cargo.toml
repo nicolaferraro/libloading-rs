@@ -3,9 +3,10 @@ name = "plugin"
 version = "0.1.0"
 edition = "2018"
 
+[lib]
+crate-type = ["dylib"]
+
 [dependencies]
 async-trait = "0.1.51"
 common = { path = "../common" }
 tokio = { version = "1", features = ["full"] }
-hyper = { version = "0.14", features = ["full"] }
-hyper-tls = "0.5.0"
