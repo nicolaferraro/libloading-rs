@@ -7,6 +7,11 @@ use common::Helloer;
 
 #[tokio::main]
 async fn main() {
+    call_lib().await;
+    println!("5. End of main");
+}
+
+async fn call_lib() -> String {
     let (_lib, helloer) = load_helloer_from_lib();
 
     Handle::current().spawn(async {
@@ -14,9 +19,8 @@ async fn main() {
     }).await.unwrap();
 
     let resp = helloer.say_hello().await;
-    println!("{}", resp);
-
-    println!("5. End of main");
+    println!("{}", &resp);
+    resp
 }
 
 fn load_helloer_from_lib() -> (Library, Box<dyn Helloer>) {
@@ -29,5 +33,18 @@ fn load_helloer_from_lib() -> (Library, Box<dyn Helloer>) {
         let func: libloading::Symbol<unsafe extern fn(Handle) -> Box<dyn Helloer>> = lib.get(b"load_plugin").unwrap();
         let helloer = func(Handle::current());
         (lib, helloer)
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn check_working_from_main_lib() {
+        let res = call_lib().await;
+        assert_eq!(res, "4. Return value");
+        println!("5. End of test");
     }
 }

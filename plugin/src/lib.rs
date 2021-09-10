@@ -22,16 +22,3 @@ impl Helloer for Actor {
         "4. Return value".to_string()
     }
 }
-
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn check_working() {
-        let a = Actor {};
-        let res = a.say_hello().await;
-        assert!(res.contains("<html"));
-    }
-}
