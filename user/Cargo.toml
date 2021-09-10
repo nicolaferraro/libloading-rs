@@ -1,0 +1,10 @@
+[package]
+name = "user"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+common = { path = "../common" }
+plugin = { path = "../plugin" }
+libloading = "0.7.0"
